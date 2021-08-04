@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Header from '../../components/Header';
 import Navbar from '../../components/Navbar';
-import NothingIcon from '../../assets/icons/icon_nothing.svg';
 import ListItem from '../../components/ListItem';
+import Error from '../../components/Error';
 
 const RecentSearch = () => {
   const [favouriteCity, setFavouriteCity] = useState([]);
@@ -20,16 +20,19 @@ const RecentSearch = () => {
       <Navbar />
       <Wrapper>
         {favouriteCity.length > 0 ? (
-          <ul>
-            {[...favouriteCity].reverse().map((city) => (
-              <ListItem data={city} key={city.id} />
-            ))}
-          </ul>
+          <>
+            <div className="controls">
+              <p className="favourite-count">You recently searched for</p>
+              <button className="btn-remove">Clear All</button>
+            </div>
+            <ul>
+              {[...favouriteCity].reverse().map((city) => (
+                <ListItem data={city} key={city.id} />
+              ))}
+            </ul>
+          </>
         ) : (
-          <div className="center-div">
-            <img src={NothingIcon} alt="nothing" />
-            <span>No Recent Search</span>
-          </div>
+          <Error />
         )}
       </Wrapper>
     </>
@@ -38,21 +41,30 @@ const RecentSearch = () => {
 
 const Wrapper = styled.section`
   height: calc(100vh - 150px);
-  .center-div {
+  .controls {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    height: 100%;
-    gap: 1.25rem;
+    padding: 0 0.625rem;
   }
-  span {
+
+  .favourite-count {
     color: #ffffff;
-    font-size: 18px;
+    font-size: 13px;
+    letter-spacing: 0;
+    line-height: 15px;
+  }
+
+  .btn-remove {
+    color: #ffffff;
+    font-size: 13px;
     font-weight: 500;
     letter-spacing: 0;
-    line-height: 21px;
-    text-align: center;
+    line-height: 15px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
   }
   ul {
     padding: 0;
