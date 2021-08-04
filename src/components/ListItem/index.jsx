@@ -1,12 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-// import SunnyIcon from '../../assets/icons/icon_mostly_sunny_small.svg';
 import FavouriteActiveIcon from '../../assets/icons/icon_favourite_Active.svg';
 import FavouriteIcon from '../../assets/icons/icon_favourite.png';
 import { getIconId } from '../../utils/helpers';
 
 const ListItem = ({ data }) => {
+  const toggleFavourites = (id) => {
+    let oldData = JSON.parse(localStorage.getItem('weather-app')) || [];
+    if (oldData.some((obj) => obj.id === id)) {
+      const selected = oldData.find((obj) => obj.id === id).favourite;
+      oldData.find((obj) => obj.id === id).favourite = !selected;
+      localStorage.setItem('weather-app', JSON.stringify(oldData));
+    }
+  };
+
   return (
     <Wrapper iconID={getIconId(data.weather.icon)}>
       <h3 className="city">{data.city}</h3>
@@ -22,6 +30,7 @@ const ListItem = ({ data }) => {
         className="fav-icon"
         src={data.favourite ? FavouriteActiveIcon : FavouriteIcon}
         alt="favourite"
+        onClick={() => toggleFavourites(data.id)}
       />
     </Wrapper>
   );
@@ -93,6 +102,7 @@ const Wrapper = styled.li`
   .fav-icon {
     width: 18px;
     height: 17px;
+    cursor: pointer;
   }
 
   .weather-icon {
