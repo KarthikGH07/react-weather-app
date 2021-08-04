@@ -13,9 +13,13 @@ const WeatherCard = ({ data }) => {
         <p className="value">
           {data?.title === 'temperature'
             ? `${Math.round(data?.value?.min)}\u{00B0} - ${Math.round(data?.value?.max)}\u{00B0}`
-            : data?.title === 'precipitation' || data?.title === 'humidity'
-            ? `${data?.value}%`
-            : `${data?.value}mph`}
+            : data?.title === 'precipitation'
+            ? `${data?.value} mm`
+            : data?.title === 'humidity'
+            ? `${data?.value} %`
+            : data?.title === 'visibility'
+            ? `${(data?.value / 1000).toFixed(1)} km`
+            : `${(data?.value * 3.6).toFixed(1)} km/h`}
         </p>
       </div>
     </Wrapper>

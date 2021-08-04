@@ -7,6 +7,11 @@ body {
   margin: 0;
 }
 
+#root {
+  margin: 0 7.5rem;
+  height: calc(100vh - 50px);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -15,4 +20,11 @@ body {
   background-image: url('./assets/images/background.svg');
   background-size: cover;
   background-attachment: fixed;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
 }
