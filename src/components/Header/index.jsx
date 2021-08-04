@@ -39,11 +39,11 @@ const Header = ({ searchQuery, setSearchQuery, handleSearch }) => {
 };
 
 const Wrapper = styled.header`
-  margin: 2rem 7.5rem 0 7.5rem;
+  margin: 2rem 0 0 0;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+
   padding-bottom: 3rem;
   .logo {
     height: 30px;
