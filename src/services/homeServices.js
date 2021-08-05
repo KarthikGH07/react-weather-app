@@ -10,7 +10,7 @@ export const getLatLongWeather = async (lat, lon) => {
   return result;
 };
 
-export const searchWeather = async (query) => {
+export const getWeather = async (query) => {
   const result = await (
     await axios.get(`${BASE_URL}?q=${query}&appid=${process.env.REACT_APP_APP_ID}&units=metric`)
   ).data;
