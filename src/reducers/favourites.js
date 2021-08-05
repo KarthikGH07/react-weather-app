@@ -13,14 +13,12 @@ const favourites = (state = initialState, action) => {
     case GET_FAVOURITES:
       return [...action.payload];
     case ADD_TO_FAVOURITES:
-      return [...state, action.payload];
+      return [action.payload, ...state];
     case REMOVE_FAVOURITE: {
       const newState = state.filter((obj) => obj.id !== action.payload);
-      console.log(newState);
       return [...newState];
     }
     case FILTER_FAVOURITES:
-      console.log(action.payload);
       if (!action.payload) {
         return JSON.parse(localStorage.getItem('weather-app')).favourite || [];
       }

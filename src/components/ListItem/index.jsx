@@ -4,22 +4,22 @@ import PropTypes from 'prop-types';
 import FavouriteActiveIcon from '../../assets/icons/icon_favourite_Active.svg';
 import FavouriteIcon from '../../assets/icons/icon_favourite.png';
 import { getIconId } from '../../utils/helpers';
-// import { useDispatch } from 'react-redux';
-// import { removeFavourite, addToFavourites } from '../../actions/favourites';
+import { useDispatch } from 'react-redux';
+import { removeFavourite, addToFavourites } from '../../actions/favourites';
 import { useLocation } from 'react-router-dom';
 
-const ListItem = ({ data, handleClick }) => {
-  // console.log(data);
-  // const dispatch = useDispatch();
+const ListItem = ({ data }) => {
+  const dispatch = useDispatch();
   const location = useLocation();
 
-  // const handleButtonClick = () => {
-  //   if (location.pathname === '/favourite') {
-  //     dispatch(removeFavourite(data.id));
-  //   } else {
-  //     if (!data.favourite) dispatch(addToFavourites(data));
-  //   }
-  // };
+  const handleButtonClick = () => {
+    if (location.pathname === '/favourite') {
+      dispatch(removeFavourite(data.id));
+    } else {
+      if (!data.favourite) dispatch(addToFavourites(data));
+      else dispatch(removeFavourite(data.id));
+    }
+  };
 
   return (
     <Wrapper iconID={getIconId(data?.weather?.icon)}>
@@ -44,7 +44,7 @@ const ListItem = ({ data, handleClick }) => {
             : FavouriteIcon
         }
         alt="favourite"
-        onClick={() => handleClick(data.id)}
+        onClick={handleButtonClick}
       />
     </Wrapper>
   );
@@ -172,7 +172,7 @@ const Wrapper = styled.li`
 
 ListItem.propTypes = {
   data: PropTypes.object,
-  handleClick: PropTypes.func,
+  // handleClick: PropTypes.func,
 };
 
 export default ListItem;

@@ -20,14 +20,6 @@ const RecentSearch = () => {
     dispatch(getFavourites());
   }, [recents]);
 
-  // const handleButtonClick = (id = 0, data = {}) => {
-  //   if (location.pathname === '/favourite') {
-  //     dispatch(removeFavourite(id));
-  //   } else {
-  //     if (!data.favourite) dispatch(addToFavourites(data));
-  //   }
-  // };
-
   return (
     <>
       <Wrapper>
@@ -41,24 +33,10 @@ const RecentSearch = () => {
             </div>
             <ul>
               {recents.map((city) => {
-                // console.log(favourites.some((obj) => obj['id'] === city.id));
                 if (favourites.some((obj) => obj['id'] === city.id)) {
-                  return (
-                    <ListItem
-                      data={{ ...city, favourite: true }}
-                      key={city.id}
-                      // //eslint-disable-next-line
-                      // handleButtonClick={(id, obj) => handleButtonClick(id)}
-                    />
-                  );
+                  return <ListItem data={{ ...city, favourite: true }} key={city.id} />;
                 } else {
-                  return (
-                    <ListItem
-                      data={city}
-                      key={city.id}
-                      // handleButtonClick={(id, obj) => handleButtonClick(obj)}
-                    />
-                  );
+                  return <ListItem data={city} key={city.id} />;
                 }
               })}
             </ul>

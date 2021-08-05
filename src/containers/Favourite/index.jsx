@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ListItem from '../../components/ListItem';
 import Error from '../../components/Error';
 import { useSelector, useDispatch } from 'react-redux';
-import { getFavourites, removeAllFavourites, removeFavourite } from '../../actions/favourites';
+import { getFavourites, removeAllFavourites } from '../../actions/favourites';
 
 const Favourite = () => {
   const favourites = useSelector((state) => state.favourites);
@@ -34,13 +34,7 @@ const Favourite = () => {
             </div>
             <ul>
               {[...favourites].reverse().map((city) => {
-                return (
-                  <ListItem
-                    data={city}
-                    key={city.id}
-                    handleClick={(id) => dispatch(removeFavourite(id))}
-                  />
-                );
+                return <ListItem data={city} key={city.id} />;
               })}
             </ul>
           </>

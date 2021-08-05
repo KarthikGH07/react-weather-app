@@ -12,9 +12,8 @@ const recents = (state = initialState, action) => {
     case GET_RECENTS:
       return [...action.payload];
     case ADD_TO_RECENT:
-      return [...state, action.payload];
+      return [action.payload, ...state];
     case FILTER_RECENTS:
-      console.log(action.payload);
       if (!action.payload) {
         return JSON.parse(localStorage.getItem('weather-app')).recent || [];
       }
