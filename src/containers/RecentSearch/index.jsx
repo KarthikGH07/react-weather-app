@@ -1,34 +1,66 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import Header from '../../components/Header';
-import Navbar from '../../components/Navbar';
 import ListItem from '../../components/ListItem';
 import Error from '../../components/Error';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRecents, removeAllRecents } from '../../actions/recentSearch';
+import { getFavourites } from '../../actions/favourites';
 
 const RecentSearch = () => {
-  const [favouriteCity, setFavouriteCity] = useState([]);
+  const dispatch = useDispatch();
+  const recents = useSelector((state) => state.recents);
+  const favourites = useSelector((state) => state.favourites);
 
   useEffect(() => {
-    const favourites = JSON.parse(localStorage.getItem('weather-app'));
-    if (favourites) {
-      setFavouriteCity(favourites);
-    }
+    dispatch(getRecents());
+    dispatch(getFavourites());
   }, []);
+
+  useEffect(() => {
+    dispatch(getFavourites());
+  }, [recents]);
+
+  // const handleButtonClick = (id = 0, data = {}) => {
+  //   if (location.pathname === '/favourite') {
+  //     dispatch(removeFavourite(id));
+  //   } else {
+  //     if (!data.favourite) dispatch(addToFavourites(data));
+  //   }
+  // };
+
   return (
     <>
-      <Header />
-      <Navbar />
       <Wrapper>
-        {favouriteCity.length > 0 ? (
+        {recents.length > 0 ? (
           <>
             <div className="controls">
               <p className="favourite-count">You recently searched for</p>
-              <button className="btn-remove">Clear All</button>
+              <button className="btn-remove" onClick={() => dispatch(removeAllRecents())}>
+                Clear All
+              </button>
             </div>
             <ul>
-              {[...favouriteCity].reverse().map((city) => (
-                <ListItem data={city} key={city.id} />
-              ))}
+              {recents.map((city) => {
+                console.log(favourites.map((obj) => obj['id'] === city.id)[0]);
+                if (favourites.map((obj) => obj['id'] === city.id)[0]) {
+                  return (
+                    <ListItem
+                      data={{ ...city, favourite: true }}
+                      key={city.id}
+                      // //eslint-disable-next-line
+                      // handleButtonClick={(id, obj) => handleButtonClick(id)}
+                    />
+                  );
+                } else {
+                  return (
+                    <ListItem
+                      data={city}
+                      key={city.id}
+                      // handleButtonClick={(id, obj) => handleButtonClick(obj)}
+                    />
+                  );
+                }
+              })}
             </ul>
           </>
         ) : (
@@ -70,7 +102,6 @@ const Wrapper = styled.section`
     padding: 0;
     margin: 0;
     overflow-y: auto;
-    height: 100%;
   }
   ul::-webkit-scrollbar {
     width: 0;

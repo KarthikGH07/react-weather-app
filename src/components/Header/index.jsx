@@ -1,36 +1,60 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import AppLogo from '../../assets/icons/logo_web.png';
 import SearchIcon from '../../assets/icons/icon_search_white.svg';
+import { useDispatch } from 'react-redux';
+import { searchWeather } from '../../actions/weather';
+import { filterFavourite } from '../../actions/favourites';
+import { useLocation } from 'react-router-dom';
+import { filterRecents } from '../../actions/recentSearch';
 
-const Header = ({ searchQuery, setSearchQuery, handleSearch }) => {
+const Header = () => {
+  const dispatch = useDispatch();
+  const [searchQuery, setSearchQuery] = useState('');
+  const location = useLocation();
+
+  useEffect(() => {
+    setSearchQuery('');
+  }, [location]);
+
   const handleSearchTextChange = (e) => {
     let charCode = typeof e.which == 'number' ? e.which : e.keyCode;
     if (charCode === 13) {
-      handleSearch(e.target.value);
-      setSearchQuery('');
+      handleSearch();
     }
   };
+
+  const handleSearch = () => {
+    if (location.pathname === '/') {
+      dispatch(searchWeather(searchQuery));
+    } else if (location.pathname === '/favourite') {
+      dispatch(filterFavourite(searchQuery));
+    } else {
+      dispatch(filterRecents(searchQuery));
+    }
+    setSearchQuery('');
+  };
+
+  const handleOnChange = (e) => {
+    setSearchQuery(e.target.value);
+    if (location.pathname === '/favourite') {
+      dispatch(filterFavourite(e.target.value));
+    } else if (location.pathname === '/recent') {
+      dispatch(filterRecents(e.target.value));
+    }
+  };
+
   return (
     <Wrapper>
       <img className="logo" src={AppLogo} alt="logo" />
       <div className="search-bar-container">
-        <img
-          className="search-icon"
-          src={SearchIcon}
-          alt="search-icon"
-          onClick={() => {
-            handleSearch(searchQuery);
-            setSearchQuery('');
-          }}
-        />
+        <img className="search-icon" src={SearchIcon} alt="search-icon" onClick={handleSearch} />
         <input
           className="search-bar"
           type="text"
           placeholder="Search city"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={handleOnChange}
           onKeyPress={handleSearchTextChange}
         />
       </div>
@@ -83,11 +107,5 @@ const Wrapper = styled.header`
     cursor: pointer;
   }
 `;
-
-Header.propTypes = {
-  searchQuery: PropTypes.string,
-  setSearchQuery: PropTypes.func,
-  handleSearch: PropTypes.func,
-};
 
 export default Header;

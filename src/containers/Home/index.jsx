@@ -1,66 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getLatLongWeather, searchWeather } from '../../services/homeServices';
 import WeatherCard from './common/WeatherCard';
-import Header from '../../components/Header';
 import FavouriteIcon from '../../assets/icons/icon_favourite.png';
 import FavouriteActiveIcon from '../../assets/icons/icon_favourite_Active.svg';
-import Navbar from '../../components/Navbar';
 import TempToggle from './common/TempToggle';
 import { getIconId } from '../../utils/helpers';
 import AppLogo from '../../assets/icons/logo_web.png';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchLocalWeather } from '../../actions/weather';
+import { addToFavourites } from '../../actions/favourites';
+import { addToRecents } from '../../actions/recentSearch';
 
 const Home = () => {
-  const [weather, setWeather] = useState({});
-  const [searchQuery, setSearchQuery] = useState('');
-  //eslint-disable-next-line
+  const weather = useSelector((state) => state.weather);
+  const dispatch = useDispatch();
   const [favourite, setFavourite] = useState(false);
   const [tempUnit, setTempUnit] = useState('c');
 
   useEffect(() => {
-    const fetchWeather = async () => {
-      await navigator.geolocation.getCurrentPosition((position) => {
-        getLatLongWeather(position.coords.latitude, position.coords.longitude).then((res) =>
-          setWeather(res),
-        );
-      });
-    };
-    fetchWeather();
+    dispatch(fetchLocalWeather());
   }, []);
 
   useEffect(() => {
     if (Object.keys(weather).length) {
-      let oldData = JSON.parse(localStorage.getItem('weather-app')) || [];
-      if (oldData.some((obj) => obj.id === weather.id)) {
-        const selected = oldData.find((obj) => obj.id === weather.id).favourite;
+      let oldData = JSON.parse(localStorage.getItem('weather-app')) || {
+        recent: [],
+        favourite: [],
+      };
+      if (oldData.favourite.some((obj) => obj.id === weather.id)) {
+        const selected = oldData.favourite.find((obj) => obj.id === weather.id).favourite;
         setFavourite(selected);
       } else setFavourite(false);
-      if (oldData.some((obj) => obj.id === weather.id)) {
-        console.log('move up');
-      } else {
-        localStorage.setItem(
-          'weather-app',
-          JSON.stringify([
-            ...oldData,
-            {
-              id: weather.id,
-              city: `${weather?.name}, ${weather?.sys?.country}`,
-              weather: {
-                main: weather?.weather[0]?.description,
-                temp: weather?.main?.temp,
-                icon: weather?.weather[0]?.icon,
-              },
-              favourite: false,
-            },
-          ]),
-        );
-      }
+
+      dispatch(
+        addToRecents({
+          id: weather.id,
+          city: `${weather?.name}, ${weather?.sys?.country}`,
+          weather: {
+            main: weather?.weather[0]?.description,
+            temp: weather?.main?.temp,
+            icon: weather?.weather[0]?.icon,
+          },
+        }),
+      );
     }
   }, [weather]);
-
-  const handleSearch = (query) => {
-    searchWeather(query).then((res) => setWeather(res));
-  };
 
   const toggleTemperature = () => {
     if (tempUnit === 'c') {
@@ -71,29 +55,18 @@ const Home = () => {
   };
 
   const handleFavourite = () => {
-    let oldData = JSON.parse(localStorage.getItem('weather-app')) || [];
-    if (oldData.some((obj) => obj.id === weather.id)) {
-      const selected = oldData.find((obj) => obj.id === weather.id).favourite;
-      oldData.find((obj) => obj.id === weather.id).favourite = !selected;
-      localStorage.setItem('weather-app', JSON.stringify(oldData));
-    } else {
-      localStorage.setItem(
-        'weather-app',
-        JSON.stringify([
-          ...oldData,
-          {
-            id: weather.id,
-            city: `${weather?.name}, ${weather?.sys?.country}`,
-            weather: {
-              main: weather?.weather[0]?.description,
-              temp: weather?.main?.temp,
-              icon: weather?.weather[0]?.icon,
-            },
-            favourite: !favourite,
-          },
-        ]),
-      );
-    }
+    dispatch(
+      addToFavourites({
+        id: weather.id,
+        city: `${weather?.name}, ${weather?.sys?.country}`,
+        weather: {
+          main: weather?.weather[0]?.description,
+          temp: weather?.main?.temp,
+          icon: weather?.weather[0]?.icon,
+        },
+        favourite: !favourite,
+      }),
+    );
     setFavourite(!favourite);
   };
 
@@ -107,13 +80,7 @@ const Home = () => {
 
   return (
     <>
-      <Header
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        handleSearch={handleSearch}
-      />
-      <Navbar />
-      <Wrapper iconID={Object.keys(weather).length ? getIconId(weather.weather[0].icon) : ''}>
+      <Wrapper iconID={Object.keys(weather).length ? getIconId(weather?.weather[0].icon) : ''}>
         <section className="city-container">
           <h2>
             {weather?.name}, {weather?.sys?.country}

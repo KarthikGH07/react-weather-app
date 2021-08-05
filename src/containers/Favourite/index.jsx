@@ -1,44 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import Header from '../../components/Header';
 import ListItem from '../../components/ListItem';
-import Navbar from '../../components/Navbar';
 import Error from '../../components/Error';
+import { useSelector, useDispatch } from 'react-redux';
+import { getFavourites, removeAllFavourites, removeFavourite } from '../../actions/favourites';
 
 const Favourite = () => {
-  const [favouriteCity, setFavouriteCity] = useState([]);
+  const favourites = useSelector((state) => state.favourites);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const favourites = JSON.parse(localStorage.getItem('weather-app'));
-    if (favourites) {
-      setFavouriteCity(favourites);
-    }
+    dispatch(getFavourites());
   }, []);
 
-  const removeAllFavourites = () => {};
+  const handleButtonClick = () => {
+    if (confirm('Are you sure want to remove all the favourites?')) {
+      dispatch(removeAllFavourites());
+    } else {
+      console.log('No');
+    }
+  };
 
   return (
     <>
-      <Header />
-      <Navbar />
       <Wrapper>
-        {favouriteCity.length > 0 &&
-        favouriteCity.filter((obj) => obj.favourite === true).length > 0 ? (
+        {favourites.length > 0 ? (
           <>
             <div className="controls">
-              <p className="favourite-count">
-                {favouriteCity.filter((obj) => obj.favourite === true).length} City added as
-                favourite
-              </p>
-              <button className="btn-remove" onClick={removeAllFavourites}>
+              <p className="favourite-count">{favourites.length} City added as favourite</p>
+              <button className="btn-remove" onClick={handleButtonClick}>
                 Remove All
               </button>
             </div>
             <ul>
-              {[...favouriteCity].reverse().map((city) => {
-                if (city.favourite) {
-                  return <ListItem data={city} key={city.id} />;
-                }
+              {[...favourites].reverse().map((city) => {
+                return (
+                  <ListItem
+                    data={city}
+                    key={city.id}
+                    handleClick={(id) => dispatch(removeFavourite(id))}
+                  />
+                );
               })}
             </ul>
           </>

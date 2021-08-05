@@ -4,33 +4,45 @@ import PropTypes from 'prop-types';
 import FavouriteActiveIcon from '../../assets/icons/icon_favourite_Active.svg';
 import FavouriteIcon from '../../assets/icons/icon_favourite.png';
 import { getIconId } from '../../utils/helpers';
+// import { useDispatch } from 'react-redux';
+// import { removeFavourite, addToFavourites } from '../../actions/favourites';
+import { useLocation } from 'react-router-dom';
 
-const ListItem = ({ data }) => {
-  const toggleFavourites = (id) => {
-    let oldData = JSON.parse(localStorage.getItem('weather-app')) || [];
-    if (oldData.some((obj) => obj.id === id)) {
-      const selected = oldData.find((obj) => obj.id === id).favourite;
-      oldData.find((obj) => obj.id === id).favourite = !selected;
-      localStorage.setItem('weather-app', JSON.stringify(oldData));
-    }
-  };
+const ListItem = ({ data, handleClick }) => {
+  console.log(data);
+  // const dispatch = useDispatch();
+  const location = useLocation();
+
+  // const handleButtonClick = () => {
+  //   if (location.pathname === '/favourite') {
+  //     dispatch(removeFavourite(data.id));
+  //   } else {
+  //     if (!data.favourite) dispatch(addToFavourites(data));
+  //   }
+  // };
 
   return (
-    <Wrapper iconID={getIconId(data.weather.icon)}>
+    <Wrapper iconID={getIconId(data?.weather?.icon)}>
       <h3 className="city">{data.city}</h3>
       <div className="temperature-div">
-        <img className="weather-icon" alt={data.weather.main} />
+        <img className="weather-icon" alt={data?.weather?.main} />
         <h1>
-          {Math.round(data?.weather.temp)}&nbsp;<span className="degree">&deg;</span>
+          {Math.round(data?.weather?.temp)}&nbsp;<span className="degree">&deg;</span>
           <span className="temp-unit">C</span>
         </h1>
-        <h3>{data.weather.main}</h3>
+        <h3>{data?.weather?.main}</h3>
       </div>
       <img
         className="fav-icon"
-        src={data.favourite ? FavouriteActiveIcon : FavouriteIcon}
+        src={
+          location.pathname === '/favourite'
+            ? FavouriteActiveIcon
+            : data.favourite
+            ? FavouriteActiveIcon
+            : FavouriteIcon
+        }
         alt="favourite"
-        onClick={() => toggleFavourites(data.id)}
+        onClick={() => handleClick(data.id)}
       />
     </Wrapper>
   );
@@ -112,6 +124,7 @@ const Wrapper = styled.li`
 
 ListItem.propTypes = {
   data: PropTypes.object,
+  handleClick: PropTypes.func,
 };
 
 export default ListItem;
