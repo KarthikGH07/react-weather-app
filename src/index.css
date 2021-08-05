@@ -28,3 +28,9 @@ body {
   align-items: center;
   min-height: 100%;
 }
+
+@media only screen and (max-width: 500px) {
+  #root {
+    margin: 0 1rem;
+  }
+}

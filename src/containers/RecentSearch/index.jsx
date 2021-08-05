@@ -41,8 +41,8 @@ const RecentSearch = () => {
             </div>
             <ul>
               {recents.map((city) => {
-                console.log(favourites.map((obj) => obj['id'] === city.id)[0]);
-                if (favourites.map((obj) => obj['id'] === city.id)[0]) {
+                // console.log(favourites.some((obj) => obj['id'] === city.id));
+                if (favourites.some((obj) => obj['id'] === city.id)) {
                   return (
                     <ListItem
                       data={{ ...city, favourite: true }}
@@ -102,6 +102,7 @@ const Wrapper = styled.section`
     padding: 0;
     margin: 0;
     overflow-y: auto;
+    height: inherit;
   }
   ul::-webkit-scrollbar {
     width: 0;

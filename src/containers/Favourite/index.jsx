@@ -84,6 +84,7 @@ const Wrapper = styled.section`
     padding: 0;
     margin: 0;
     overflow-y: auto;
+    height: inherit;
   }
   ul::-webkit-scrollbar {
     width: 0;

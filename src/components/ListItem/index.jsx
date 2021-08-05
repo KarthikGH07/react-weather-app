@@ -9,7 +9,7 @@ import { getIconId } from '../../utils/helpers';
 import { useLocation } from 'react-router-dom';
 
 const ListItem = ({ data, handleClick }) => {
-  console.log(data);
+  // console.log(data);
   // const dispatch = useDispatch();
   const location = useLocation();
 
@@ -23,14 +23,16 @@ const ListItem = ({ data, handleClick }) => {
 
   return (
     <Wrapper iconID={getIconId(data?.weather?.icon)}>
-      <h3 className="city">{data.city}</h3>
-      <div className="temperature-div">
-        <img className="weather-icon" alt={data?.weather?.main} />
-        <h1>
-          {Math.round(data?.weather?.temp)}&nbsp;<span className="degree">&deg;</span>
-          <span className="temp-unit">C</span>
-        </h1>
-        <h3>{data?.weather?.main}</h3>
+      <div className="weather-li">
+        <h3 className="city">{data.city}</h3>
+        <div className="temperature-div">
+          <img className="weather-icon" alt={data?.weather?.main} />
+          <h1>
+            {Math.round(data?.weather?.temp)}&nbsp;<span className="degree">&deg;</span>
+            <span className="temp-unit">C</span>
+          </h1>
+          <h3>{data?.weather?.main}</h3>
+        </div>
       </div>
       <img
         className="fav-icon"
@@ -62,6 +64,13 @@ const Wrapper = styled.li`
     .city {
       color: #ffe539;
     }
+  }
+
+  .weather-li {
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+    align-items: center;
   }
 
   .city {
@@ -119,6 +128,45 @@ const Wrapper = styled.li`
 
   .weather-icon {
     content: ${(props) => `url(./assets/icons/icon_${props.iconID}.svg)`};
+  }
+
+  @media only screen and (max-width: 500px) {
+    .weather-li {
+      flex-direction: column;
+    }
+
+    .city {
+      color: #ffe539;
+      font-size: 15px;
+      line-height: 18px;
+      white-space: nowrap;
+      margin-bottom: 0.625rem;
+    }
+
+    .temperature-div img {
+      height: 23px;
+      width: 22px;
+    }
+
+    .temperature-div h1 {
+      font-size: 18px;
+      line-height: 21px;
+    }
+
+    .temperature-div h3 {
+      font-size: 14px;
+      line-height: 16px;
+    }
+
+    .degree {
+      font-size: 10px;
+      line-height: 11px;
+    }
+
+    .temp-unit {
+      font-size: 13px;
+      line-height: 15px;
+    }
   }
 `;
 

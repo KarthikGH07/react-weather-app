@@ -231,6 +231,50 @@ const Wrapper = styled.section`
     margin: 0 7.5rem 3rem 7.5rem;
     padding-top: 2rem;
   }
+
+  @media only screen and (max-width: 500px) {
+    margin: 0.625rem 0;
+    .city-container {
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .city-container h2 {
+      font-size: 18px;
+      line-height: 21px;
+    }
+    .temp-container {
+      margin-top: 4rem;
+    }
+    .temp-container .temp {
+      font-size: 52px;
+      line-height: 61px;
+    }
+    .description {
+      font-size: 18px;
+      line-height: 21px;
+    }
+    .footer {
+      background-color: rgba(255, 255, 255, 0.1);
+      height: max-content;
+    }
+    .centered-footer {
+      margin: 0 1rem 1.8rem 1rem;
+      overflow-x: auto;
+      gap: 2rem;
+      display: -webkit-box;
+      cursor: default;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    .centered-footer::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
+    }
+  }
 `;
 
 export default Home;

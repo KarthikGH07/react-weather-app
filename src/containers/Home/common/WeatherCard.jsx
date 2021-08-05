@@ -51,6 +51,19 @@ const Wrapper = styled.div`
     line-height: 25px;
     margin: 0;
   }
+
+  @media only screen and (max-width: 500px) {
+    .title {
+      font-size: 13px;
+      line-height: 15px;
+      white-space: nowrap;
+    }
+    .value {
+      font-size: 18px;
+      line-height: 21px;
+      white-space: nowrap;
+    }
+  }
 `;
 
 WeatherCard.propTypes = {
