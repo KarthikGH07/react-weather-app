@@ -10,6 +10,7 @@ const WeatherCard = ({ data }) => {
       </div>
       <div>
         <p className="title">{data.title === 'temperature' ? 'min - max' : data.title}</p>
+        {/* check title and make necessary conversion */}
         <p className="value">
           {data?.title === 'temperature'
             ? `${Math.round(data?.value?.min)}\u{00B0} - ${Math.round(data?.value?.max)}\u{00B0}`
@@ -52,7 +53,7 @@ const Wrapper = styled.div`
     margin: 0;
   }
 
-  @media only screen and (max-width: 500px) {
+  @media only screen and (max-width: 576px) {
     .title {
       font-size: 13px;
       line-height: 15px;
@@ -61,6 +62,18 @@ const Wrapper = styled.div`
     .value {
       font-size: 18px;
       line-height: 21px;
+      white-space: nowrap;
+    }
+  }
+  @media only screen and (min-width: 769px) and (max-width: 1024px) {
+    .title {
+      font-size: 16px;
+      line-height: 17px;
+      white-space: nowrap;
+    }
+    .value {
+      font-size: 20px;
+      line-height: 22px;
       white-space: nowrap;
     }
   }

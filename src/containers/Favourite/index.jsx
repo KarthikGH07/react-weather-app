@@ -78,7 +78,7 @@ const Wrapper = styled.section`
     padding: 0;
     margin: 0;
     overflow-y: auto;
-    height: inherit;
+    max-height: 85%;
   }
   ul::-webkit-scrollbar {
     width: 0;

@@ -29,8 +29,40 @@ body {
   min-height: 100%;
 }
 
-@media only screen and (max-width: 500px) {
+.date-time-mobile {
+  display: none;
+}
+
+@media only screen and (max-width: 576px) {
   #root {
     margin: 0 1rem;
+  }
+  .date-time-mobile {
+    display: flex;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    line-height: 15px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+}
+
+@media only screen and (min-width: 577px) and (max-width: 768px) {
+  #root {
+    margin: 0 2rem;
+  }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+  #root {
+    margin: 0 3rem;
+  }
+}
+
+@media screen and (min-width: 2000px) {
+  #root {
+    margin: 0 20rem;
   }
 }

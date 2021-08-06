@@ -29,6 +29,7 @@ const Header = () => {
   };
 
   const handleSearch = () => {
+    // if opened page is home page then call API else filter from the results
     if (location.pathname === '/') {
       dispatch(searchWeather(searchQuery));
     } else if (location.pathname === '/favourite') {
@@ -133,7 +134,7 @@ const Wrapper = styled.header`
     cursor: pointer;
   }
 
-  @media only screen and (max-width: 500px) {
+  @media only screen and (max-width: 576px) {
     .logo {
       height: 24px;
       width: 113px;
@@ -163,6 +164,12 @@ const Wrapper = styled.header`
       cursor: pointer;
       position: fixed;
       right: 1rem;
+    }
+  }
+
+  @media only screen and (min-width: 577px) and (max-width: 767px) {
+    .search-bar {
+      width: 18rem;
     }
   }
 `;

@@ -32,7 +32,7 @@ const RecentSearch = () => {
               </button>
             </div>
             <ul>
-              {recents.map((city) => {
+              {recents.reverse().map((city) => {
                 if (favourites.some((obj) => obj['id'] === city.id)) {
                   return <ListItem data={{ ...city, favourite: true }} key={city.id} />;
                 } else {
@@ -80,7 +80,7 @@ const Wrapper = styled.section`
     padding: 0;
     margin: 0;
     overflow-y: auto;
-    height: inherit;
+    max-height: 85%;
   }
   ul::-webkit-scrollbar {
     width: 0;

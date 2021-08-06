@@ -45,6 +45,7 @@ const Navbar = () => {
         </div>
         <span className="date-time">{date}</span>
       </Wrapper>
+      <span className="date-time-mobile">{date}</span>
     </OutsideAlerter>
   );
 };
@@ -73,6 +74,7 @@ const Wrapper = styled.nav`
     color: #ffd639;
     font-weight: 500;
     border-bottom: 2px solid #ffd639;
+    padding-bottom: 2px;
   }
 
   .date-time {
@@ -98,7 +100,7 @@ const Wrapper = styled.nav`
     background-color: #fff;
   }
 
-  @media only screen and (max-width: 500px) {
+  @media only screen and (max-width: 576px) {
     border: none;
     position: fixed;
     left: -150%;
@@ -155,12 +157,7 @@ const Wrapper = styled.nav`
     }
 
     .date-time {
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 13px;
-      letter-spacing: 1.5px;
-      line-height: 15px;
-      text-align: center;
-      text-transform: uppercase;
+      display: none;
     }
 
     .hamburger.active .bar:nth-child(2) {
@@ -173,6 +170,12 @@ const Wrapper = styled.nav`
 
     .hamburger.active .bar:nth-child(3) {
       transform: translateY(-8px) rotate(-45deg);
+    }
+  }
+
+  @media only screen and (min-width: 577px) and (max-width: 768px) {
+    a {
+      margin-right: 0.625rem;
     }
   }
 `;

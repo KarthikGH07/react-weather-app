@@ -14,7 +14,7 @@ const ListItem = ({ data }) => {
 
   const handleButtonClick = () => {
     if (location.pathname === '/favourite') {
-      dispatch(removeFavourite(data.id));
+      dispatch(removeFavourite(data.id)); //remove from favourites
     } else {
       if (!data.favourite) dispatch(addToFavourites(data));
       else dispatch(removeFavourite(data.id));
@@ -68,8 +68,7 @@ const Wrapper = styled.li`
 
   .weather-li {
     display: flex;
-    justify-content: space-between;
-    width: 70%;
+    width: 65%;
     align-items: center;
   }
 
@@ -80,7 +79,7 @@ const Wrapper = styled.li`
     letter-spacing: 0;
     line-height: 19px;
     margin: 0;
-    max-width: 30%;
+    flex: 0 0 60%;
   }
 
   .temperature-div {
@@ -130,9 +129,11 @@ const Wrapper = styled.li`
     content: ${(props) => `url(./assets/icons/icon_${props.iconID}.svg)`};
   }
 
-  @media only screen and (max-width: 500px) {
+  @media only screen and (max-width: 576px) {
     .weather-li {
       flex-direction: column;
+      width: auto;
+      align-items: stretch;
     }
 
     .city {
@@ -141,6 +142,7 @@ const Wrapper = styled.li`
       line-height: 18px;
       white-space: nowrap;
       margin-bottom: 0.625rem;
+      flex: 0 1 auto;
     }
 
     .temperature-div img {
@@ -172,7 +174,6 @@ const Wrapper = styled.li`
 
 ListItem.propTypes = {
   data: PropTypes.object,
-  // handleClick: PropTypes.func,
 };
 
 export default ListItem;
