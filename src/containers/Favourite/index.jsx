@@ -13,7 +13,7 @@ const Favourite = () => {
     dispatch(getFavourites());
   }, []);
 
-  const handleButtonClick = () => {
+  const handleRemoveButtonClick = () => {
     if (confirm('Are you sure want to remove all the favourites?')) {
       dispatch(removeAllFavourites());
     } else {
@@ -28,7 +28,7 @@ const Favourite = () => {
           <>
             <div className="controls">
               <p className="favourite-count">{favourites.length} City added as favourite</p>
-              <button className="btn-remove" onClick={handleButtonClick}>
+              <button className="btn-remove" onClick={handleRemoveButtonClick}>
                 Remove All
               </button>
             </div>
