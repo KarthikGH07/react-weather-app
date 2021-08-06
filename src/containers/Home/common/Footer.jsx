@@ -12,17 +12,17 @@ const Footer = () => {
         <WeatherCard
           data={{
             title: 'temperature',
-            value: { min: weather?.main?.temp_min, max: weather?.main?.temp_min },
+            value: { min: weather?.temp_min, max: weather?.temp_max },
           }}
         />
         <WeatherCard
           data={{
             title: 'precipitation',
-            value: weather['rain'] !== undefined ? `${weather?.rain['1h']}` : 0,
+            value: `${weather?.pop}`,
           }}
         />
-        <WeatherCard data={{ title: 'humidity', value: weather?.main?.humidity }} />
-        <WeatherCard data={{ title: 'wind', value: weather?.wind?.speed }} />
+        <WeatherCard data={{ title: 'humidity', value: weather?.humidity }} />
+        <WeatherCard data={{ title: 'wind', value: weather?.wind_speed }} />
         <WeatherCard data={{ title: 'visibility', value: weather?.visibility }} />
       </div>
     </Wrapper>

@@ -15,7 +15,7 @@ const WeatherCard = ({ data }) => {
           {data?.title === 'temperature'
             ? `${Math.round(data?.value?.min)}\u{00B0} - ${Math.round(data?.value?.max)}\u{00B0}`
             : data?.title === 'precipitation'
-            ? `${data?.value} mm`
+            ? `${data?.value * 100} %`
             : data?.title === 'humidity'
             ? `${data?.value} %`
             : data?.title === 'visibility'
