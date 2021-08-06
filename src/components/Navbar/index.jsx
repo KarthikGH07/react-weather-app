@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { NavLink, useLocation } from 'react-router-dom';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import OutsideAlerter from '../OutsiteClickAlerter';
+import { useSelector } from 'react-redux';
 
 const Navbar = () => {
+  const weather = useSelector((state) => state.weather);
   const [date, setDate] = useState(moment().format('ddd, DD MMM YYYY   hh:mm A'));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
@@ -14,39 +16,39 @@ const Navbar = () => {
   }, [location]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      console.log('1');
-      setDate(moment().format('ddd, DD MMM YYYY   hh:mm A'));
-    }, 60000);
-    return () => clearInterval(interval);
-  }, []);
+    if (Object.keys(weather).length) {
+      setDate(moment.unix(weather?.dt).tz(weather?.timezone).format('ddd, DD MMM YYYY   hh:mm A'));
+    }
+  }, [weather]);
 
   return (
-    <OutsideAlerter handlePress={() => setIsMenuOpen(false)}>
-      <Wrapper className={isMenuOpen ? 'active' : ''}>
-        <div
-          className={isMenuOpen ? 'hamburger active' : 'hamburger'}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          <span className="bar"></span>
-          <span className="bar"></span>
-          <span className="bar"></span>
-        </div>
-        <div className="navbar-links">
-          <NavLink exact to="/" activeClassName="selected">
-            Home
-          </NavLink>
-          <NavLink to="/favourite" activeClassName="selected">
-            Favourite
-          </NavLink>
-          <NavLink to="/recent" activeClassName="selected">
-            Recent Search
-          </NavLink>
-        </div>
-        <span className="date-time">{date}</span>
-      </Wrapper>
+    <>
+      <OutsideAlerter handlePress={() => setIsMenuOpen(false)}>
+        <Wrapper className={isMenuOpen ? 'active' : ''}>
+          <div
+            className={isMenuOpen ? 'hamburger active' : 'hamburger'}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+          </div>
+          <div className="navbar-links">
+            <NavLink exact to="/" activeClassName="selected">
+              Home
+            </NavLink>
+            <NavLink to="/favourite" activeClassName="selected">
+              Favourite
+            </NavLink>
+            <NavLink to="/recent" activeClassName="selected">
+              Recent Search
+            </NavLink>
+          </div>
+          <span className="date-time">{date}</span>
+        </Wrapper>
+      </OutsideAlerter>
       <span className="date-time-mobile">{date}</span>
-    </OutsideAlerter>
+    </>
   );
 };
 
