@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-// import WeatherCard from './common/WeatherCard';
 import FavouriteIcon from '../../assets/icons/icon_favourite.png';
 import FavouriteActiveIcon from '../../assets/icons/icon_favourite_Active.svg';
 import TempToggle from './common/TempToggle';
@@ -36,11 +35,11 @@ const Home = () => {
       dispatch(
         addToRecents({
           id: weather.id,
-          city: `${weather?.name}, ${weather?.sys?.country}`,
+          city: `${weather?.name}, ${weather?.country}`,
           weather: {
-            main: weather?.weather[0]?.description,
-            temp: weather?.main?.temp,
-            icon: weather?.weather[0]?.icon,
+            main: weather?.description,
+            temp: weather?.temp,
+            icon: weather?.icon,
           },
         }),
       );
@@ -59,19 +58,18 @@ const Home = () => {
     dispatch(
       addToFavourites({
         id: weather.id,
-        city: `${weather?.name}, ${weather?.sys?.country}`,
+        city: `${weather?.name}, ${weather?.country}`,
         weather: {
-          main: weather?.weather[0]?.description,
-          temp: weather?.main?.temp,
-          icon: weather?.weather[0]?.icon,
+          main: weather?.description,
+          temp: weather?.temp,
+          icon: weather?.icon,
         },
-        favourite: !favourite,
       }),
     );
     setFavourite(!favourite);
   };
 
-  if (!Object.keys(weather).length) {
+  if (!Object.keys(weather).length || weather.loading) {
     return (
       <div className="loading">
         <img src={AppLogo} alt="Loading" />
@@ -81,10 +79,10 @@ const Home = () => {
 
   return (
     <>
-      <Wrapper iconID={Object.keys(weather).length ? getIconId(weather?.weather[0].icon) : ''}>
+      <Wrapper iconID={Object.keys(weather).length ? getIconId(weather?.icon) : ''}>
         <section className="city-container">
           <h2>
-            {weather?.name}, {weather?.sys?.country}
+            {weather?.name}, {weather?.country}
           </h2>
           <div>
             <img
@@ -105,12 +103,12 @@ const Home = () => {
               <div className="temp-toggle">
                 <h1 className="temp">
                   {tempUnit === 'f'
-                    ? Math.round(weather?.main?.temp * 1.8 + 32)
-                    : Math.round(weather?.main?.temp)}
+                    ? Math.round(weather?.temp * 1.8 + 32)
+                    : Math.round(weather?.temp)}
                 </h1>
                 <TempToggle tempUnit={tempUnit} toggleTemperature={toggleTemperature} />
               </div>
-              <p className="description">{weather?.weather[0]?.description}</p>
+              <p className="description">{weather?.description}</p>
             </section>
             <Footer />
           </>

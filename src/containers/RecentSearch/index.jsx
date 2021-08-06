@@ -20,6 +20,14 @@ const RecentSearch = () => {
     dispatch(getFavourites());
   }, [recents]);
 
+  const handleClearButtonClick = () => {
+    if (confirm('Are you sure want to clear all the history?')) {
+      dispatch(removeAllRecents());
+    } else {
+      console.log('No');
+    }
+  };
+
   return (
     <>
       <Wrapper>
@@ -27,12 +35,12 @@ const RecentSearch = () => {
           <>
             <div className="controls">
               <p className="favourite-count">You recently searched for</p>
-              <button className="btn-remove" onClick={() => dispatch(removeAllRecents())}>
+              <button className="btn-remove" onClick={handleClearButtonClick}>
                 Clear All
               </button>
             </div>
             <ul>
-              {recents.reverse().map((city) => {
+              {[...recents].reverse().map((city) => {
                 if (favourites.some((obj) => obj['id'] === city.id)) {
                   return <ListItem data={{ ...city, favourite: true }} key={city.id} />;
                 } else {
