@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import WeatherCard from './common/WeatherCard';
+// import WeatherCard from './common/WeatherCard';
 import FavouriteIcon from '../../assets/icons/icon_favourite.png';
 import FavouriteActiveIcon from '../../assets/icons/icon_favourite_Active.svg';
 import TempToggle from './common/TempToggle';
@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchLocalWeather } from '../../actions/weather';
 import { addToFavourites } from '../../actions/favourites';
 import { addToRecents } from '../../actions/recentSearch';
+import Footer from './common/Footer';
 
 const Home = () => {
   const weather = useSelector((state) => state.weather);
@@ -111,25 +112,7 @@ const Home = () => {
               </div>
               <p className="description">{weather?.weather[0]?.description}</p>
             </section>
-            <section className="footer">
-              <div className="centered-footer">
-                <WeatherCard
-                  data={{
-                    title: 'temperature',
-                    value: { min: weather?.main?.temp_min, max: weather?.main?.temp_min },
-                  }}
-                />
-                <WeatherCard
-                  data={{
-                    title: 'precipitation',
-                    value: weather['rain'] !== undefined ? `${weather?.rain['1h']}` : 0,
-                  }}
-                />
-                <WeatherCard data={{ title: 'humidity', value: weather?.main?.humidity }} />
-                <WeatherCard data={{ title: 'wind', value: weather?.wind?.speed }} />
-                <WeatherCard data={{ title: 'visibility', value: weather?.visibility }} />
-              </div>
-            </section>
+            <Footer />
           </>
         )}
       </Wrapper>
@@ -149,7 +132,7 @@ const Wrapper = styled.section`
   .city-container h2 {
     margin: 0;
     color: #ffffff;
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 500;
     letter-spacing: 0;
     line-height: 24px;
@@ -194,7 +177,7 @@ const Wrapper = styled.section`
 
   .temp-container .temp {
     color: #ffffff;
-    font-size: 64px;
+    font-size: 4rem;
     font-weight: 500;
     letter-spacing: 0;
     line-height: 75px;
@@ -216,23 +199,7 @@ const Wrapper = styled.section`
     text-transform: capitalize;
   }
 
-  .footer {
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-  }
-
-  .centered-footer {
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
-    display: flex;
-    gap: 3rem;
-    justify-content: center;
-    margin: 0 7.5rem 3rem 7.5rem;
-    padding-top: 2rem;
-  }
-
-  @media only screen and (max-width: 500px) {
+  @media only screen and (max-width: 576px) {
     margin: 0.625rem 0;
     .city-container {
       align-items: center;
@@ -253,26 +220,39 @@ const Wrapper = styled.section`
       font-size: 18px;
       line-height: 21px;
     }
-    .footer {
-      background-color: rgba(255, 255, 255, 0.1);
-      height: max-content;
+  }
+
+  @media only screen and (min-height: 869px) {
+    .temp-container {
+      margin-top: 6rem;
     }
-    .centered-footer {
-      margin: 0 1rem 1.8rem 1rem;
-      overflow-x: auto;
-      gap: 2rem;
-      display: -webkit-box;
-      cursor: default;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -khtml-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
+  }
+
+  @media only screen and (min-width: 1024px) and (min-height: 1025px) {
+    .city-container h2 {
+      font-size: 2rem;
     }
-    .centered-footer::-webkit-scrollbar {
-      width: 0;
-      background: transparent;
+
+    .city-container .favourite {
+      font-size: 1rem;
+    }
+
+    .temp-container {
+      margin-top: 14rem;
+    }
+
+    .temp-container .weather-icon {
+      height: 6.25rem;
+      width: 6.5rem;
+    }
+
+    .temp-container .temp {
+      font-size: 6rem;
+    }
+
+    .description {
+      font-size: 2rem;
+      font-weight: 400;
     }
   }
 `;
