@@ -1,84 +1,165 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getLatLongWeather, searchWeather } from '../../services/homeServices';
-import WeatherCard from './common/WeatherCard';
-import Header from '../../components/Header';
+// import WeatherCard from './common/WeatherCard';
+import FavouriteIcon from '../../assets/icons/icon_favourite.png';
+import FavouriteActiveIcon from '../../assets/icons/icon_favourite_Active.svg';
+import TempToggle from './common/TempToggle';
+import { getIconId } from '../../utils/helpers';
+import AppLogo from '../../assets/icons/logo_web.png';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchLocalWeather } from '../../actions/weather';
+import { addToFavourites } from '../../actions/favourites';
+import { addToRecents } from '../../actions/recentSearch';
+import Footer from './common/Footer';
 
 const Home = () => {
-  const [weather, setWeather] = useState();
-  const [searchQuery, setSearchQuery] = useState('');
+  const weather = useSelector((state) => state.weather);
+  const dispatch = useDispatch();
+  const [favourite, setFavourite] = useState(false);
+  const [tempUnit, setTempUnit] = useState('c');
 
   useEffect(() => {
-    const fetchWeather = async () => {
-      await navigator.geolocation.getCurrentPosition((position) => {
-        getLatLongWeather(position.coords.latitude, position.coords.longitude).then((res) =>
-          setWeather(res),
-        );
-      });
-    };
-    fetchWeather();
+    dispatch(fetchLocalWeather());
   }, []);
 
-  const handleSearch = (query) => {
-    searchWeather(query).then((res) => setWeather(res));
+  useEffect(() => {
+    if (Object.keys(weather).length) {
+      let oldData = JSON.parse(localStorage.getItem('weather-app')) || {
+        recent: [],
+        favourite: [],
+      };
+      if (oldData.favourite.some((obj) => obj.id === weather.id)) {
+        const selected = oldData.favourite.find((obj) => obj.id === weather.id).favourite;
+        setFavourite(selected);
+      } else setFavourite(false);
+
+      dispatch(
+        addToRecents({
+          id: weather.id,
+          city: `${weather?.name}, ${weather?.sys?.country}`,
+          weather: {
+            main: weather?.weather[0]?.description,
+            temp: weather?.main?.temp,
+            icon: weather?.weather[0]?.icon,
+          },
+        }),
+      );
+    }
+  }, [weather]);
+
+  const toggleTemperature = () => {
+    if (tempUnit === 'c') {
+      setTempUnit('f');
+    } else {
+      setTempUnit('c');
+    }
   };
+
+  const handleFavourite = () => {
+    dispatch(
+      addToFavourites({
+        id: weather.id,
+        city: `${weather?.name}, ${weather?.sys?.country}`,
+        weather: {
+          main: weather?.weather[0]?.description,
+          temp: weather?.main?.temp,
+          icon: weather?.weather[0]?.icon,
+        },
+        favourite: !favourite,
+      }),
+    );
+    setFavourite(!favourite);
+  };
+
+  if (!Object.keys(weather).length) {
+    return (
+      <div className="loading">
+        <img src={AppLogo} alt="Loading" />
+      </div>
+    );
+  }
 
   return (
     <>
-      <Header
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        handleSearch={handleSearch}
-      />
-      <Wrapper>
+      <Wrapper iconID={Object.keys(weather).length ? getIconId(weather?.weather[0].icon) : ''}>
         <section className="city-container">
           <h2>
             {weather?.name}, {weather?.sys?.country}
           </h2>
-        </section>
-        <section className="temp-container">
-          <img
-            className="weather-icon"
-            src={`http://openweathermap.org/img/wn/${weather?.weather[0].icon}@2x.png`}
-            alt="weather"
-          />
-          <h1 className="temp">{Math.round(weather?.main?.temp)}</h1>
-          <p className="description">{weather?.weather[0]?.description}</p>
-        </section>
-        <section className="footer">
-          <div className="centered-footer">
-            <WeatherCard
-              data={{
-                title: 'temperature',
-                value: { min: weather?.main?.temp_min, max: weather?.main?.temp_min },
-              }}
+          <div>
+            <img
+              className="favourite-icon"
+              src={favourite ? FavouriteActiveIcon : FavouriteIcon}
+              alt="favourite"
+              onClick={handleFavourite}
             />
-            <WeatherCard data={{ title: 'precipitation', value: weather?.main?.pressure }} />
-            <WeatherCard data={{ title: 'humidity', value: weather?.main?.humidity }} />
-            <WeatherCard data={{ title: 'wind', value: weather?.wind?.speed }} />
-            <WeatherCard data={{ title: 'visibility', value: weather?.visibility }} />
+            <span className={`favourite ${favourite && 'active'}`}>
+              {favourite ? 'Added to favourite' : 'Add to favourite'}
+            </span>
           </div>
         </section>
+        {Object.keys(weather).length !== 0 && (
+          <>
+            <section className="temp-container">
+              <img className="weather-icon" alt="weather" />
+              <div className="temp-toggle">
+                <h1 className="temp">
+                  {tempUnit === 'f'
+                    ? Math.round(weather?.main?.temp * 1.8 + 32)
+                    : Math.round(weather?.main?.temp)}
+                </h1>
+                <TempToggle tempUnit={tempUnit} toggleTemperature={toggleTemperature} />
+              </div>
+              <p className="description">{weather?.weather[0]?.description}</p>
+            </section>
+            <Footer />
+          </>
+        )}
       </Wrapper>
     </>
   );
 };
 
 const Wrapper = styled.section`
-  margin: 3rem 7.5rem;
+  margin: 3rem 0;
 
   .city-container {
     display: flex;
+    flex-direction: column;
     justify-content: flex-start;
   }
 
   .city-container h2 {
     margin: 0;
     color: #ffffff;
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 500;
     letter-spacing: 0;
     line-height: 24px;
+  }
+
+  .city-container div {
+    margin-top: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.325rem;
+  }
+
+  .city-container img {
+    width: 18px;
+    height: 17px;
+  }
+
+  .city-container .favourite {
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 15px;
+  }
+
+  .favourite.active {
+    color: #fad05b;
   }
 
   .temp-container {
@@ -86,21 +167,27 @@ const Wrapper = styled.section`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 1.5rem;
   }
 
   .temp-container .weather-icon {
-    height: 6.25rem;
-    width: 6.25rem;
+    height: 84px;
+    width: 80px;
+    content: ${(props) => `url(./assets/icons/icon_${props.iconID}.svg)`};
   }
 
   .temp-container .temp {
     color: #ffffff;
-    font-size: 64px;
+    font-size: 4rem;
     font-weight: 500;
     letter-spacing: 0;
     line-height: 75px;
     margin: 0;
+  }
+
+  .temp-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   .description {
@@ -112,20 +199,61 @@ const Wrapper = styled.section`
     text-transform: capitalize;
   }
 
-  .footer {
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    left: 0;
+  @media only screen and (max-width: 576px) {
+    margin: 0.625rem 0;
+    .city-container {
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .city-container h2 {
+      font-size: 18px;
+      line-height: 21px;
+    }
+    .temp-container {
+      margin-top: 4rem;
+    }
+    .temp-container .temp {
+      font-size: 52px;
+      line-height: 61px;
+    }
+    .description {
+      font-size: 18px;
+      line-height: 21px;
+    }
   }
 
-  .centered-footer {
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
-    display: flex;
-    gap: 3rem;
-    justify-content: center;
-    margin: 0 7.5rem 3rem 7.5rem;
-    padding-top: 2rem;
+  @media only screen and (min-height: 869px) {
+    .temp-container {
+      margin-top: 6rem;
+    }
+  }
+
+  @media only screen and (min-width: 1024px) and (min-height: 1025px) {
+    .city-container h2 {
+      font-size: 2rem;
+    }
+
+    .city-container .favourite {
+      font-size: 1rem;
+    }
+
+    .temp-container {
+      margin-top: 14rem;
+    }
+
+    .temp-container .weather-icon {
+      height: 6.25rem;
+      width: 6.5rem;
+    }
+
+    .temp-container .temp {
+      font-size: 6rem;
+    }
+
+    .description {
+      font-size: 2rem;
+      font-weight: 400;
+    }
   }
 `;
 

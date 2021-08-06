@@ -10,12 +10,17 @@ const WeatherCard = ({ data }) => {
       </div>
       <div>
         <p className="title">{data.title === 'temperature' ? 'min - max' : data.title}</p>
+        {/* check title and make necessary conversion */}
         <p className="value">
           {data?.title === 'temperature'
             ? `${Math.round(data?.value?.min)}\u{00B0} - ${Math.round(data?.value?.max)}\u{00B0}`
-            : data?.title === 'precipitation' || data?.title === 'humidity'
-            ? `${data?.value}%`
-            : `${data?.value}mph`}
+            : data?.title === 'precipitation'
+            ? `${data?.value} mm`
+            : data?.title === 'humidity'
+            ? `${data?.value} %`
+            : data?.title === 'visibility'
+            ? `${(data?.value / 1000).toFixed(1)} km`
+            : `${(data?.value * 3.6).toFixed(1)} km/h`}
         </p>
       </div>
     </Wrapper>
@@ -46,6 +51,31 @@ const Wrapper = styled.div`
     letter-spacing: 0;
     line-height: 25px;
     margin: 0;
+  }
+
+  @media only screen and (max-width: 576px) {
+    .title {
+      font-size: 13px;
+      line-height: 15px;
+      white-space: nowrap;
+    }
+    .value {
+      font-size: 18px;
+      line-height: 21px;
+      white-space: nowrap;
+    }
+  }
+  @media only screen and (min-width: 769px) and (max-width: 1024px) {
+    .title {
+      font-size: 16px;
+      line-height: 17px;
+      white-space: nowrap;
+    }
+    .value {
+      font-size: 20px;
+      line-height: 22px;
+      white-space: nowrap;
+    }
   }
 `;
 

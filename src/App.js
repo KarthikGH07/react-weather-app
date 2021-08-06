@@ -1,13 +1,9 @@
 import React from 'react';
 import './App.css';
-import Home from './containers/Home';
+import Routes from './routes/Routes';
 
 function App() {
-  return (
-    <>
-      <Home />
-    </>
-  );
+  return <Routes />;
 }
 
 export default App;
