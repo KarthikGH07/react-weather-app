@@ -8,7 +8,7 @@
 - Create a file at the root of the project called `.env` with the following contents:
 
 ```sh
-REACT_APP_API_KEY = The API key you obtained from openweathermap.org
+REACT_APP_APP_ID = The API key you obtained from openweathermap.org
 ```
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
