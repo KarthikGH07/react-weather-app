@@ -10,3 +10,5 @@ export const FILTER_RECENTS = 'FILTER_RECENTS';
 export const ADD_TO_RECENT = 'ADD_TO_RECENT';
 export const REMOVE_ALL_RECENTS = 'REMOVE_ALL_RECENTS';
 export const GET_RECENTS = 'GET_RECENTS';
+
+export const SET_LOADING = 'SET_LOADING';

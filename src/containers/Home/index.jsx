@@ -69,7 +69,7 @@ const Home = () => {
     setFavourite(!favourite);
   };
 
-  if (!Object.keys(weather).length) {
+  if (!Object.keys(weather).length || weather.loading) {
     return (
       <div className="loading">
         <img src={AppLogo} alt="Loading" />

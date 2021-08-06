@@ -16,7 +16,7 @@ const Navbar = () => {
   }, [location]);
 
   useEffect(() => {
-    if (Object.keys(weather).length) {
+    if (Object.keys(weather).length > 1) {
       setDate(moment.unix(weather?.dt).tz(weather?.timezone).format('ddd, DD MMM YYYY   hh:mm A'));
     }
   }, [weather]);
