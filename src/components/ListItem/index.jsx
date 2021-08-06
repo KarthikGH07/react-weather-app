@@ -127,6 +127,8 @@ const Wrapper = styled.li`
 
   .weather-icon {
     content: ${(props) => `url(./assets/icons/icon_${props.iconID}.svg)`};
+    max-width: 40px;
+    max-height: 30px;
   }
 
   @media only screen and (max-width: 576px) {
