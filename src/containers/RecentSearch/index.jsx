@@ -1,15 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ListItem from '../../components/ListItem';
 import Error from '../../components/Error';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRecents, removeAllRecents } from '../../actions/recentSearch';
 import { getFavourites } from '../../actions/favourites';
+import Popup from '../../components/Popup';
 
 const RecentSearch = () => {
   const dispatch = useDispatch();
   const recents = useSelector((state) => state.recents);
   const favourites = useSelector((state) => state.favourites);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getRecents());
@@ -20,12 +22,9 @@ const RecentSearch = () => {
     dispatch(getFavourites());
   }, [recents]);
 
-  const handleClearButtonClick = () => {
-    if (confirm('Are you sure want to clear all the history?')) {
-      dispatch(removeAllRecents());
-    } else {
-      console.log('No');
-    }
+  const onYesClick = () => {
+    dispatch(removeAllRecents());
+    setIsOpen(false);
   };
 
   return (
@@ -35,7 +34,7 @@ const RecentSearch = () => {
           <>
             <div className="controls">
               <p className="favourite-count">You recently searched for</p>
-              <button className="btn-remove" onClick={handleClearButtonClick}>
+              <button className="btn-remove" onClick={() => setIsOpen(true)}>
                 Clear All
               </button>
             </div>
@@ -51,6 +50,13 @@ const RecentSearch = () => {
           </>
         ) : (
           <Error />
+        )}
+        {isOpen && (
+          <Popup
+            content="Are you sure want to clear all the recents?"
+            onCancel={() => setIsOpen(false)}
+            onSubmit={onYesClick}
+          />
         )}
       </Wrapper>
     </>
