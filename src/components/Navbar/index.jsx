@@ -6,7 +6,7 @@ import OutsideAlerter from '../OutsiteClickAlerter';
 import { useSelector } from 'react-redux';
 
 const Navbar = () => {
-  const weather = useSelector((state) => state.weather);
+  const weather = useSelector((state) => state.weather).data;
   const [date, setDate] = useState(moment().format('ddd, DD MMM YYYY  hh:mm A'));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
@@ -16,7 +16,7 @@ const Navbar = () => {
   }, [location]);
 
   useEffect(() => {
-    if (Object.keys(weather).length > 1) {
+    if (Object.keys(weather).length) {
       setDate(moment.unix(weather?.dt).tz(weather?.timezone).format('ddd, DD MMM YYYY  hh:mm A'));
     }
   }, [weather]);

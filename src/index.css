@@ -9,11 +9,12 @@ body {
 
 #root {
   margin: 0 7.5rem;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 100px);
 }
 
 * {
   box-sizing: border-box;
+  font-family: Roboto;
 }
 
 body {

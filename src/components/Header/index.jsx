@@ -30,15 +30,18 @@ const Header = () => {
 
   const handleSearch = () => {
     // if opened page is home page then call API else filter from the results
-    if (location.pathname === '/') {
-      dispatch(searchWeather(searchQuery));
-    } else if (location.pathname === '/favourite') {
-      dispatch(filterFavourite(searchQuery));
-    } else {
-      dispatch(filterRecents(searchQuery));
+    if (searchQuery) {
+      //check if query is not empty string
+      if (location.pathname === '/') {
+        dispatch(searchWeather(searchQuery));
+      } else if (location.pathname === '/favourite') {
+        dispatch(filterFavourite(searchQuery));
+      } else {
+        dispatch(filterRecents(searchQuery));
+      }
+      setSearchQuery('');
+      setIsSearchBarVisible(false);
     }
-    setSearchQuery('');
-    setIsSearchBarVisible(false);
   };
 
   const handleOnChange = (e) => {
@@ -110,20 +113,23 @@ const Wrapper = styled.header`
     width: 458px;
     color: rgba(255, 255, 255, 1);
     font-size: 16px;
+    font-family: 'Roboto';
     letter-spacing: 0;
     line-height: 19px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 3px;
     background-color: rgba(255, 255, 255, 0.3);
     outline: none;
-    padding-left: 1rem;
+    padding: 0.8125rem 0 0.8125rem 1rem;
   }
 
   .search-bar::placeholder {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.7);
     font-size: 16px;
+    font-family: 'Roboto';
     letter-spacing: 0;
     line-height: 19px;
+    font-weight: 300;
   }
 
   .search-icon {
