@@ -28,7 +28,7 @@ const Home = () => {
         favourite: [],
       };
       if (oldData.favourite.some((obj) => obj.id === weather.id)) {
-        const selected = oldData.favourite.find((obj) => obj.id === weather.id).favourite;
+        const selected = oldData.favourite.find((obj) => obj.id === weather.id);
         setFavourite(selected);
       } else setFavourite(false);
 
