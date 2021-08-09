@@ -12,3 +12,5 @@ export const REMOVE_ALL_RECENTS = 'REMOVE_ALL_RECENTS';
 export const GET_RECENTS = 'GET_RECENTS';
 
 export const SET_LOADING = 'SET_LOADING';
+export const SET_UNIT = 'SET_UNIT';
+export const SET_ERROR = 'SET_ERROR';

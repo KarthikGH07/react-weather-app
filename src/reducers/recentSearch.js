@@ -13,15 +13,17 @@ const recents = (state = initialState, action) => {
       return [...action.payload];
     case ADD_TO_RECENT:
       return [...state, action.payload];
-    case FILTER_RECENTS:
+    case FILTER_RECENTS: {
       // if search query is empty return recents from localStorage
       // else filter based on query
+      const recentSearches = JSON.parse(localStorage.getItem('weather-app')).recent || [];
       if (!action.payload) {
-        return JSON.parse(localStorage.getItem('weather-app')).recent || [];
+        return recentSearches;
       }
-      return [
-        ...state.filter((obj) => obj.city.toLowerCase().includes(action.payload.toLowerCase())),
-      ];
+      return recentSearches.filter((obj) =>
+        obj.city.toLowerCase().includes(action.payload.toLowerCase()),
+      );
+    }
     case REMOVE_ALL_RECENTS:
       return [];
     default:
