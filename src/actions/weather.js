@@ -33,7 +33,11 @@ export const searchWeather = (query) => async (dispatch) => {
 
 export const setUnit = (value) => {
   const weatherAppData = JSON.parse(localStorage.getItem('weather-app'));
-  localStorage.setItem('weather-app', JSON.stringify({ ...weatherAppData, unit: value }));
+  if (!weatherAppData) {
+    localStorage.setItem('weather-app', JSON.stringify({ recent: [], favourite: [], unit: value }));
+  } else {
+    localStorage.setItem('weather-app', JSON.stringify({ ...weatherAppData, unit: value }));
+  }
   return { type: SET_UNIT, payload: value };
 };
 

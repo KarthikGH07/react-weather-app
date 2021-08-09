@@ -28,7 +28,7 @@ export const getWeather = async (query) => {
       return {};
     }
   } catch (err) {
-    console.log(err.response.status);
+    console.log(err?.response?.status);
   }
 };
 

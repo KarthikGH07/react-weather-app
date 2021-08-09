@@ -24,8 +24,15 @@ const Home = () => {
   const history = useHistory();
 
   useEffect(() => {
+    window.addEventListener('beforeunload', () => history.push('/'));
+    return () => {
+      window.removeEventListener('beforeunload', () => history.push('/'));
+    };
+  }, []);
+
+  useEffect(() => {
     if (history.action === 'POP' && Object.keys(weather).length) {
-      console.log('popped');
+      return;
     } else {
       if (location?.state?.city) {
         dispatch(searchWeather(location.state.city));
@@ -36,7 +43,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(setUnit(JSON.parse(localStorage.getItem('weather-app')).unit || 'metric'));
+    dispatch(setUnit(JSON.parse(localStorage.getItem('weather-app'))?.unit || 'metric'));
   }, []);
 
   useEffect(() => {
