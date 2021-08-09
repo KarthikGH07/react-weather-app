@@ -1,19 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import { setUnit } from '../../../actions/weather';
+import { useSelector, useDispatch } from 'react-redux';
 
-const TempToggle = ({ tempUnit, toggleTemperature }) => {
+const TempToggle = () => {
+  const dispatch = useDispatch();
+  const unit = useSelector((state) => state.weather).unit;
+
+  const toggleUnits = () => {
+    if (unit === 'metric') {
+      dispatch(setUnit('imperial'));
+    } else {
+      dispatch(setUnit('metric'));
+    }
+  };
+
   return (
     <Wrapper>
-      <button
-        className={tempUnit === 'c' ? 'celsius selected' : 'celsius '}
-        onClick={toggleTemperature}
-      >
+      <button className={unit === 'metric' ? 'celsius selected' : 'celsius '} onClick={toggleUnits}>
         &deg;C
       </button>
       <button
-        className={tempUnit === 'f' ? 'faranheit selected' : 'faranheit'}
-        onClick={toggleTemperature}
+        className={unit === 'imperial' ? 'faranheit selected' : 'faranheit'}
+        onClick={toggleUnits}
       >
         &deg;F
       </button>
@@ -33,13 +42,16 @@ const Wrapper = styled.div`
     line-height: 19px;
     background-color: transparent;
     padding: 2px;
+    cursor: pointer;
   }
   .celsius {
     border-right: none;
+    border-radius: 2px 0 0 2px;
   }
 
   .faranheit {
     border-left: none;
+    border-radius: 0 2px 2px 0;
   }
 
   .celsius.selected,
@@ -48,10 +60,5 @@ const Wrapper = styled.div`
     color: #e32843;
   }
 `;
-
-TempToggle.propTypes = {
-  tempUnit: PropTypes.string,
-  toggleTemperature: PropTypes.func,
-};
 
 export default TempToggle;

@@ -1,14 +1,27 @@
-import { FETCH_LOCAL_WEATHER, SEARCH_WEATHER, SET_LOADING } from '../constants/actionTypes';
+import {
+  FETCH_LOCAL_WEATHER,
+  SEARCH_WEATHER,
+  SET_LOADING,
+  SET_UNIT,
+  SET_ERROR,
+} from '../constants/actionTypes';
 
-const initialState = { loading: false };
+const initialState = { data: {}, loading: false, unit: 'metric', error: false };
 const weather = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_LOCAL_WEATHER:
-      return { ...state, ...action.payload, loading: false };
+      return { ...state, data: action.payload, loading: false };
     case SEARCH_WEATHER:
-      return { ...state, ...action.payload, loading: false };
+      if (!action.payload) {
+        return { ...state, loading: false, error: true };
+      }
+      return { ...state, data: action.payload, loading: false };
     case SET_LOADING:
       return { ...state, loading: true };
+    case SET_UNIT:
+      return { ...state, unit: action.payload };
+    case SET_ERROR:
+      return { ...state, error: action.payload };
     default:
       return state;
   }
