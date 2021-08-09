@@ -191,6 +191,7 @@ const Wrapper = styled.section`
   .description {
     color: #ffffff;
     font-size: 22px;
+    font-weight: 400;
     letter-spacing: 0;
     line-height: 25px;
     margin: 0.625rem;

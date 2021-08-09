@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 const Navbar = () => {
   const weather = useSelector((state) => state.weather);
-  const [date, setDate] = useState(moment().format('ddd, DD MMM YYYY   hh:mm A'));
+  const [date, setDate] = useState(moment().format('ddd, DD MMM YYYY  hh:mm A'));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -17,7 +17,7 @@ const Navbar = () => {
 
   useEffect(() => {
     if (Object.keys(weather).length > 1) {
-      setDate(moment.unix(weather?.dt).tz(weather?.timezone).format('ddd, DD MMM YYYY   hh:mm A'));
+      setDate(moment.unix(weather?.dt).tz(weather?.timezone).format('ddd, DD MMM YYYY  hh:mm A'));
     }
   }, [weather]);
 
@@ -44,7 +44,22 @@ const Navbar = () => {
               Recent Search
             </NavLink>
           </div>
-          <span className="date-time">{date}</span>
+          <div className="date-time">
+            {date.split('  ').map((item, index) => {
+              if (index === 1) {
+                return (
+                  <span key={item} className="time">
+                    &nbsp;&nbsp;&nbsp;&nbsp;{item}
+                  </span>
+                );
+              } else
+                return (
+                  <span key={item} className="date">
+                    {item}
+                  </span>
+                );
+            })}
+          </div>
         </Wrapper>
       </OutsideAlerter>
       <span className="date-time-mobile">{date}</span>
@@ -57,6 +72,10 @@ const Wrapper = styled.nav`
   justify-content: space-between;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 
+  .navbar-links {
+    padding-bottom: 5px;
+  }
+
   a {
     color: #ffffff;
     font-size: 13px;
@@ -66,6 +85,7 @@ const Wrapper = styled.nav`
     text-transform: uppercase;
     margin-right: 2rem;
     padding: 0 1rem;
+    padding-bottom: 5px;
   }
 
   a:hover {
@@ -76,15 +96,19 @@ const Wrapper = styled.nav`
     color: #ffd639;
     font-weight: 500;
     border-bottom: 2px solid #ffd639;
-    padding-bottom: 2px;
+    padding-bottom: 4px;
   }
 
   .date-time {
+    margin-right: 1rem;
+    padding-bottom: 5px;
+  }
+
+  .date-time span {
     color: #ffffff;
     font-size: 14px;
     letter-spacing: 0;
     line-height: 16px;
-    padding-bottom: 5px;
   }
 
   .hamburger {
