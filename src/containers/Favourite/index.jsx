@@ -1,24 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ListItem from '../../components/ListItem';
 import Error from '../../components/Error';
 import { useSelector, useDispatch } from 'react-redux';
 import { getFavourites, removeAllFavourites } from '../../actions/favourites';
+import Popup from '../../components/Popup';
 
 const Favourite = () => {
   const favourites = useSelector((state) => state.favourites);
   const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getFavourites());
   }, []);
 
-  const handleRemoveButtonClick = () => {
-    if (confirm('Are you sure want to remove all the favourites?')) {
-      dispatch(removeAllFavourites());
-    } else {
-      console.log('No');
-    }
+  const onYesClick = () => {
+    dispatch(removeAllFavourites());
+    setIsOpen(false);
   };
 
   return (
@@ -28,7 +27,7 @@ const Favourite = () => {
           <>
             <div className="controls">
               <p className="favourite-count">{favourites.length} City added as favourite</p>
-              <button className="btn-remove" onClick={handleRemoveButtonClick}>
+              <button className="btn-remove" onClick={() => setIsOpen(true)}>
                 Remove All
               </button>
             </div>
@@ -40,6 +39,13 @@ const Favourite = () => {
           </>
         ) : (
           <Error type="favourite" />
+        )}
+        {isOpen && (
+          <Popup
+            content="Are you sure want to remove all the favourites?"
+            onCancel={() => setIsOpen(false)}
+            onSubmit={onYesClick}
+          />
         )}
       </Wrapper>
     </>

@@ -1,24 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
 import FavouriteIcon from '../../assets/icons/icon_favourite.png';
 import FavouriteActiveIcon from '../../assets/icons/icon_favourite_Active.svg';
 import TempToggle from './common/TempToggle';
 import { getIconId } from '../../utils/helpers';
 import AppLogo from '../../assets/icons/logo_web.png';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchLocalWeather } from '../../actions/weather';
+import { fetchLocalWeather, searchWeather, setError, setUnit } from '../../actions/weather';
 import { addToFavourites } from '../../actions/favourites';
 import { addToRecents } from '../../actions/recentSearch';
 import Footer from './common/Footer';
+import Popup from '../../components/Popup';
 
 const Home = () => {
-  const weather = useSelector((state) => state.weather);
+  const weather = useSelector((state) => state.weather).data;
+  const loading = useSelector((state) => state.weather).loading;
+  const unit = useSelector((state) => state.weather).unit;
+  const error = useSelector((state) => state.weather).error;
   const dispatch = useDispatch();
   const [favourite, setFavourite] = useState(false);
-  const [tempUnit, setTempUnit] = useState('c');
+  const location = useLocation();
+  const history = useHistory();
 
   useEffect(() => {
-    dispatch(fetchLocalWeather());
+    window.addEventListener('beforeunload', () => history.push('/'));
+    return () => {
+      window.removeEventListener('beforeunload', () => history.push('/'));
+    };
+  }, []);
+
+  useEffect(() => {
+    if (history.action === 'POP' && Object.keys(weather).length) {
+      return;
+    } else {
+      if (location?.state?.city) {
+        dispatch(searchWeather(location.state.city));
+      } else {
+        dispatch(fetchLocalWeather());
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    dispatch(setUnit(JSON.parse(localStorage.getItem('weather-app'))?.unit || 'metric'));
   }, []);
 
   useEffect(() => {
@@ -26,6 +51,7 @@ const Home = () => {
       let oldData = JSON.parse(localStorage.getItem('weather-app')) || {
         recent: [],
         favourite: [],
+        unit: 'metric',
       };
       if (oldData.favourite.some((obj) => obj.id === weather.id)) {
         const selected = oldData.favourite.find((obj) => obj.id === weather.id);
@@ -46,14 +72,6 @@ const Home = () => {
     }
   }, [weather]);
 
-  const toggleTemperature = () => {
-    if (tempUnit === 'c') {
-      setTempUnit('f');
-    } else {
-      setTempUnit('c');
-    }
-  };
-
   const handleFavourite = () => {
     dispatch(
       addToFavourites({
@@ -69,7 +87,7 @@ const Home = () => {
     setFavourite(!favourite);
   };
 
-  if (!Object.keys(weather).length || weather.loading) {
+  if (loading) {
     return (
       <div className="loading">
         <img src={AppLogo} alt="Loading" />
@@ -91,7 +109,7 @@ const Home = () => {
               alt="favourite"
               onClick={handleFavourite}
             />
-            <span className={`favourite ${favourite && 'active'}`}>
+            <span className={`favourite ${favourite && 'active'}`} onClick={handleFavourite}>
               {favourite ? 'Added to favourite' : 'Add to favourite'}
             </span>
           </div>
@@ -102,16 +120,22 @@ const Home = () => {
               <img className="weather-icon" alt="weather" />
               <div className="temp-toggle">
                 <h1 className="temp">
-                  {tempUnit === 'f'
+                  {unit === 'imperial'
                     ? Math.round(weather?.temp * 1.8 + 32)
                     : Math.round(weather?.temp)}
                 </h1>
-                <TempToggle tempUnit={tempUnit} toggleTemperature={toggleTemperature} />
+                <TempToggle />
               </div>
               <p className="description">{weather?.description}</p>
             </section>
             <Footer />
           </>
+        )}
+        {error && (
+          <Popup
+            content="Weather data not found! Try different city."
+            onSubmit={() => dispatch(setError(false))}
+          />
         )}
       </Wrapper>
     </>
@@ -140,12 +164,13 @@ const Wrapper = styled.section`
     margin-top: 1.25rem;
     display: flex;
     align-items: center;
-    gap: 0.325rem;
   }
 
   .city-container img {
     width: 18px;
     height: 17px;
+    margin-right: 0.325rem;
+    cursor: pointer;
   }
 
   .city-container .favourite {
@@ -154,6 +179,7 @@ const Wrapper = styled.section`
     font-weight: 500;
     letter-spacing: 0;
     line-height: 15px;
+    cursor: pointer;
   }
 
   .favourite.active {

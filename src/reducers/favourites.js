@@ -18,15 +18,17 @@ const favourites = (state = initialState, action) => {
       const newState = state.filter((obj) => obj.id !== action.payload);
       return [...newState];
     }
-    case FILTER_FAVOURITES:
+    case FILTER_FAVOURITES: {
       // if search query is empty return favourites from localStorage
       // else filter based on query
+      const favouriteCities = JSON.parse(localStorage.getItem('weather-app')).favourite || [];
       if (!action.payload) {
-        return JSON.parse(localStorage.getItem('weather-app')).favourite || [];
+        return favouriteCities;
       }
-      return [
-        ...state.filter((obj) => obj.city.toLowerCase().includes(action.payload.toLowerCase())),
-      ];
+      return favouriteCities.filter((obj) =>
+        obj.city.toLowerCase().includes(action.payload.toLowerCase()),
+      );
+    }
     case REMOVE_ALL_FAVOURITES:
       return [];
     default:

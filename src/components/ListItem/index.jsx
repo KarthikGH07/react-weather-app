@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import FavouriteActiveIcon from '../../assets/icons/icon_favourite_Active.svg';
 import FavouriteIcon from '../../assets/icons/icon_favourite.png';
 import { getIconId } from '../../utils/helpers';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { removeFavourite, addToFavourites } from '../../actions/favourites';
-import { useLocation } from 'react-router-dom';
+import { setUnit } from '../../actions/weather';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const ListItem = ({ data }) => {
+  const unit = useSelector((state) => state.weather).unit;
   const dispatch = useDispatch();
   const location = useLocation();
+  const history = useHistory();
+
+  useEffect(() => {
+    dispatch(setUnit(JSON.parse(localStorage.getItem('weather-app')).unit || 'metric'));
+  }, []);
 
   const handleButtonClick = () => {
     if (location.pathname === '/favourite') {
@@ -24,12 +31,23 @@ const ListItem = ({ data }) => {
   return (
     <Wrapper iconID={getIconId(data?.weather?.icon)}>
       <div className="weather-li">
-        <h3 className="city">{data.city}</h3>
+        <h3
+          onClick={() =>
+            history.push({
+              pathname: '/',
+              state: { city: data.city },
+            })
+          }
+          className="city"
+        >
+          {data.city}
+        </h3>
         <div className="temperature-div">
           <img className="weather-icon" alt={data?.weather?.main} />
           <h1>
-            {Math.round(data?.weather?.temp)}&nbsp;<span className="degree">&deg;</span>
-            <span className="temp-unit">C</span>
+            {Math.round(unit === 'metric' ? data?.weather?.temp : data.weather.temp * 1.8 + 32)}
+            &nbsp;<span className="degree">&deg;</span>
+            <span className="temp-unit">{unit === 'metric' ? 'C' : 'F'}</span>
           </h1>
           <h3>{data?.weather?.main}</h3>
         </div>
@@ -80,6 +98,7 @@ const Wrapper = styled.li`
     line-height: 19px;
     margin: 0;
     flex: 0 0 60%;
+    cursor: pointer;
   }
 
   .temperature-div {
@@ -104,6 +123,8 @@ const Wrapper = styled.li`
     line-height: 21px;
     font-weight: 300;
     margin: 0;
+    text-transform: capitalize;
+    white-space: nowrap;
   }
 
   h3 .degree {

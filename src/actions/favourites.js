@@ -13,7 +13,6 @@ export const getFavourites = () => {
 
 export const addToFavourites = (weatherData) => async (dispatch) => {
   let oldData = JSON.parse(localStorage.getItem('weather-app')) || { recent: [], favourite: [] };
-  console.log(oldData?.favourite.some((obj) => obj.id === weatherData.id));
   if (oldData?.favourite.some((obj) => obj.id === weatherData.id)) {
     dispatch(removeFavourite(weatherData.id));
   } else {

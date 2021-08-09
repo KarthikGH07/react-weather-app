@@ -14,14 +14,22 @@ export const getLatLongWeather = async (lat, lon) => {
 };
 
 export const getWeather = async (query) => {
-  const result = await (
-    await axios.get(
-      `${BASE_URL}/weather?q=${query}&appid=${process.env.REACT_APP_APP_ID}&units=metric`,
-    )
-  ).data;
-  const detailedData = await fetchDetailedWeatherData(result.coord.lat, result.coord.lon);
-  const weatherData = mapResponseProperties(result, detailedData);
-  return weatherData;
+  try {
+    const result = await (
+      await axios.get(
+        `${BASE_URL}/weather?q=${query}&appid=${process.env.REACT_APP_APP_ID}&units=metric`,
+      )
+    ).data;
+    if (result) {
+      const detailedData = await fetchDetailedWeatherData(result.coord.lat, result.coord.lon);
+      const weatherData = mapResponseProperties(result, detailedData);
+      return weatherData;
+    } else {
+      return {};
+    }
+  } catch (err) {
+    console.log(err?.response?.status);
+  }
 };
 
 const fetchDetailedWeatherData = async (lat, lon) => {
