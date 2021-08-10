@@ -25,12 +25,8 @@ const WeatherCard = ({ data }) => {
             : data?.title === 'humidity'
             ? `${data?.value} %`
             : data?.title === 'visibility'
-            ? unit === 'metric'
-              ? `${(data?.value / 1000).toFixed(1)} km`
-              : `${(data?.value / 1000 / 1.609).toFixed(1)} m`
-            : unit === 'metric'
-            ? `${(data?.value * 3.6).toFixed(1)} kmph`
-            : `${(data?.value * 2.237).toFixed(1)} mph`}
+            ? `${(data?.value / 1000).toFixed(1)} km`
+            : `${(data?.value * 3.6).toFixed(1)} kmph`}
         </p>
       </div>
     </Wrapper>
