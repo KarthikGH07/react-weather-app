@@ -103,7 +103,6 @@ const Wrapper = styled.li`
 
   .temperature-div {
     display: flex;
-    gap: 1.5rem;
     align-items: center;
   }
 
@@ -113,7 +112,7 @@ const Wrapper = styled.li`
     font-weight: 500;
     letter-spacing: 0;
     line-height: 38px;
-    margin: 0;
+    margin: 0 0 0 0.75rem;
   }
 
   .temperature-div h3 {
@@ -122,7 +121,7 @@ const Wrapper = styled.li`
     letter-spacing: 0;
     line-height: 21px;
     font-weight: 300;
-    margin: 0;
+    margin: 0 0.75rem;
     text-transform: capitalize;
     white-space: nowrap;
   }
@@ -138,6 +137,7 @@ const Wrapper = styled.li`
     letter-spacing: 0;
     line-height: 19px;
     font-weight: 300;
+    margin-right: 0.75rem;
   }
 
   .fav-icon {
@@ -150,6 +150,7 @@ const Wrapper = styled.li`
     content: ${(props) => `url(./assets/icons/icon_${props.iconID}.svg)`};
     max-width: 40px;
     max-height: 30px;
+    margin-right: 0.75rem;
   }
 
   @media only screen and (max-width: 576px) {

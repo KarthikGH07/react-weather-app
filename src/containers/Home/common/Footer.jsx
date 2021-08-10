@@ -90,7 +90,6 @@ const Wrapper = styled.section`
     background-color: rgba(255, 255, 255, 0.1);
     .centered-footer {
       margin: 0 3rem 1rem 3rem;
-      gap: 3rem;
       overflow-x: auto;
       overflow-y: hidden;
       display: -webkit-box;

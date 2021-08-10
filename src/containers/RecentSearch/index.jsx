@@ -95,6 +95,9 @@ const Wrapper = styled.section`
     margin: 0;
     overflow-y: auto;
     max-height: 85%;
+    scrollbar-color: rgba(0, 0, 0, 0.3);
+    scrollbar-width: thin;
+    scrollbar-track-color: transparent;
   }
   ul::-webkit-scrollbar {
     width: 0;

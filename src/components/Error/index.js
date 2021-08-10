@@ -18,7 +18,6 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
-  gap: 1.25rem;
 
   span {
     color: #ffffff;
@@ -27,6 +26,7 @@ const Wrapper = styled.div`
     letter-spacing: 0;
     line-height: 21px;
     text-align: center;
+    margin-top: 1.25rem;
   }
 `;
 

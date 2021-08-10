@@ -206,12 +206,12 @@ const Wrapper = styled.section`
     letter-spacing: 0;
     line-height: 75px;
     margin: 0;
+    margin-right: 6px;
   }
 
   .temp-toggle {
     display: flex;
     align-items: center;
-    gap: 6px;
   }
 
   .description {
